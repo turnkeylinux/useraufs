@@ -1,0 +1,33 @@
+Giving users the privilege to perform unrestricted aufs operations
+(e.g., using sudo) is a big security risk, as union mounts can be
+exploited to arbitrarily restructure the filesystem as part of a
+privilege escalation attack.
+
+So I wrote a suid-root user interface called useraufs that allows safe
+user-level aufs operations. Prior to that I hardened pyproject's
+execution proxy to more securely support setuid root applications.
+
+The basic principle is that users can safely perform aufs operations
+on any directory which they own.
+
+An HRA systems-level detail is that useraufs explicitly disallows root
+from using it. To enable useraufs to operate under MAC, we need to
+grant it integrity threatening capabilities such as
+CAP_SYS_ADMIN. This is a capability that root does not have under the
+default HRA policy. If we allowed useraufs to be run by root, and
+operate on root owned directories, it could be used by an attacker
+that has compromised root access to circumvent the default policy and
+compromise system integrity.
+
+useraufs is a bit easier to use than vanilla aufs options through the
+mount commands. For the time being, it does not support the full
+breadth of aufs options since I don't see a need for them right now.
+
+Syntax: useraufs <command> [args]
+User interface for aufs
+
+Commands:
+    mount      Creates a union mount
+    remount    Remounts a union mount to perform reconfiguration operations
+    show       Show this user's union mounts
+    umount     Umount union mount

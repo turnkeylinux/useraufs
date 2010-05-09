@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # Copyright (c) 2010 TurnKey Linux - all rights reserved
-"""Python project skeleton
+"""User interface for aufs
 """
 
 import re

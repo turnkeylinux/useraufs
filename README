@@ -31,3 +31,31 @@ Commands:
     remount    Remounts a union mount to perform reconfiguration operations
     show       Show this user's union mounts
     umount     Umount union mount
+
+Security configuration
+
+By default, useraufs allows all users except root to create union mounts
+consisting of any directory branches they own on any mount points they own.
+
+However, for additional security useraufs can be limited to specific users
+and directories, by creating the /etc/useraufs.conf configuration file.
+
+useraufs.conf supports two directives:
+
+1) allow_user <username>
+
+This directive adds the uid of username to the list of allowed useraufs
+users.
+
+If the configuration file does not include any allow_user directives,
+useraufs allows all users.
+
+2) allow_dir /path/to/allow
+
+This directives adds the specified path to the list of paths useraufs
+allows as either union mount branches or mount points. Any sub paths of
+the specified path are also allowed, so for example, allowing /home will
+also allow all directories under /home.
+
+If the configuration file does not include any allow_dir directives,
+useraufs allows all paths.

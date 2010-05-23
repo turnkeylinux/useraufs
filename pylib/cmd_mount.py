@@ -1,5 +1,8 @@
 #!/usr/bin/python
 """Creates a union mount
+Options:
+	--udba=<value>		Specify UDBA level (none | reval | inotify)
+	-h			This help
 
 <branch> := /path/to/branch[=<permission> [ + <attribute> ]]
     <permission> := rw | ro
@@ -11,19 +14,33 @@ See aufs(5) for branch flag meanings.
 import sys
 import help
 import useraufs
+import getopt
 
 @help.usage(__doc__)
 def usage():
-    print >> sys.stderr, "Syntax: %s <branch>[:<branch> ...] <mount-path>" % sys.argv[0]
+    print >> sys.stderr, "Syntax: %s [ -options ] <branch>[:<branch> ...] <mount-path>" % sys.argv[0]
     
 def main():
-    if len(sys.argv) != 3:
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'h', ['udba='])
+    except getopt.GetoptError, e:
+        usage(e)
+
+    udba_level = None
+    for opt, val in opts:
+        if opt == '--udba':
+            if val not in ('none', 'reval', 'inotify'):
+                usage("invalid udba level (%s)" % val)
+
+            udba_level = val
+        elif opt == '-h':
+            usage()
+
+    if len(args) != 2:
         usage()
 
-    branches = sys.argv[1]
-    mnt = sys.argv[2]
-
-    useraufs.mount(branches, mnt)
+    branches, mnt = args
+    useraufs.mount(branches, mnt, udba=udba_level)
     
 if __name__=="__main__":
     main()

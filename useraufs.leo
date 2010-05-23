@@ -2,16 +2,16 @@
 <leo_file>
 <leo_header file_format="2" tnodes="0" max_tnode_index="8" clone_windows="0"/>
 <globals body_outline_ratio="0.5">
-	<global_window_position top="237" left="1404" height="600" width="800"/>
+	<global_window_position top="0" left="472" height="933" width="800"/>
 	<global_log_window_position top="0" left="0" height="0" width="0"/>
 </globals>
 <preferences/>
 <find_panel_settings/>
 <vnodes>
-<v t="zaril.20100509072750" a="ETV"><vh>useraufs: suid wrapper for aufs</vh>
+<v t="zaril.20100509072750" a="E"><vh>useraufs: suid wrapper for aufs</vh>
 <v t="zaril.20100509072750.1"><vh>modify pyproject to support suid Python scripts</vh></v>
 <v t="zaril.20100509072750.2" a="E"><vh>write useraufs wrapper</vh>
-<v t="zaril.20100509072750.3"><vh>useraufs-mount</vh></v>
+<v t="zaril.20100509072750.3" a="TV"><vh>useraufs-mount</vh></v>
 <v t="zaril.20100509072750.4"><vh>useraufs-umount</vh></v>
 <v t="zaril.20100509072750.5"><vh>useraufs-remount</vh></v>
 <v t="zaril.20100509072750.6"><vh>useraufs-show</vh></v>

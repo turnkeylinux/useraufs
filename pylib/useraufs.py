@@ -88,7 +88,7 @@ class UserAufs:
             if not is_dir_allowed(dir):
                 raise Error("configuration disallows operations involving directory '%s'" % dir)
 
-    def mount(self, branches, mnt):
+    def mount(self, branches, mnt, udba=None):
         dirs = [ re.sub('=.*', '', branch.strip()) for branch in branches.split(':') ]
         dirs.append(mnt)
 
@@ -96,6 +96,9 @@ class UserAufs:
             self._check_is_dir_ok(dir)
 
         options = "dirs=" + branches
+        if udba:
+            options += ",udba=" + udba
+        
         command = "mount -t aufs -o %s none %s" % (utils.mkarg(options),
                                                    utils.mkarg(mnt))
         self._system(command)
@@ -121,8 +124,8 @@ class UserAufs:
 
 
 # convenience functions
-def mount(branches, mnt):
-    UserAufs().mount(branches, mnt)
+def mount(branches, mnt, **opts):
+    UserAufs().mount(branches, mnt, **opts)
 
 def umount(mnt):
     UserAufs().umount(mnt)

@@ -104,14 +104,17 @@ class UserAufs:
         self._system(command)
 
     def remount(self, operations, mnt):
-        dirs = [ re.sub(r'^.*:(.*?)(?:=.*)?$', lambda m: m.group(1), operation.strip())
-                 for operation in operations.split(',') ]
-        dirs.append(mnt)
+        options = "remount"
+        if operations:
+            dirs = [ re.sub(r'^.*:(.*?)(?:=.*)?$', lambda m: m.group(1), operation.strip())
+                     for operation in operations.split(',') ]
+            dirs.append(mnt)
 
-        for dir in dirs:
-            self._check_is_dir_ok(dir)
+            for dir in dirs:
+                self._check_is_dir_ok(dir)
 
-        options = "remount," + operations
+            options += "," + operations
+            
         command = "mount -o %s %s" % (utils.mkarg(options),
                                       utils.mkarg(mnt))
         self._system(command)

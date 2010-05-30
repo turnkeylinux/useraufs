@@ -4,8 +4,7 @@ import sys
 import types
 
 def fatal(arg):
-    print >> sys.stderr
-    print >> sys.stderr, "FATAL: " + str(arg)
+    print >> sys.stderr, "fatal: " + str(arg)
     sys.exit(1)
 
 def mkarg(x):

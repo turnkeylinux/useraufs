@@ -66,8 +66,7 @@ class UserAufs:
         os.setreuid(self.uid, self.euid)
 
         if error != 0:
-            raise Error("failed exitcode (%d): %s" % (os.WEXITSTATUS(error), command),
-                        error)
+            raise Error("failed exitcode (%d): %s" % (os.WEXITSTATUS(error), command))
 
     def _check_is_dir_ok(self, dir):
         if not os.path.isdir(dir):

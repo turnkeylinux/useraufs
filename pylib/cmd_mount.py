@@ -16,6 +16,8 @@ import help
 import useraufs
 import getopt
 
+from utils import fatal
+
 @help.usage(__doc__)
 def usage():
     print >> sys.stderr, "Syntax: %s [ -options ] <branch>[:<branch> ...] <mount-path>" % sys.argv[0]
@@ -40,7 +42,10 @@ def main():
         usage()
 
     branches, mnt = args
-    useraufs.mount(branches, mnt, udba=udba_level)
+    try:
+        useraufs.mount(branches, mnt, udba=udba_level)
+    except useraufs.Error, e:
+        fatal(e)
     
 if __name__=="__main__":
     main()

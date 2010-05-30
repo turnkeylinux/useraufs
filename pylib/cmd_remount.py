@@ -19,6 +19,8 @@ import sys
 import help
 import useraufs
 
+from utils import fatal
+
 @help.usage(__doc__)
 def usage():
     print >> sys.stderr, "Syntax: %s <operation>[,<operation> ...] <mount-path>" % sys.argv[0]
@@ -30,7 +32,10 @@ def main():
     operations = sys.argv[1]
     mnt = sys.argv[2]
 
-    useraufs.remount(operations, mnt)
+    try:
+        useraufs.remount(operations, mnt)
+    except useraufs.Error, e:
+        fatal(e)
     
 if __name__=="__main__":
     main()

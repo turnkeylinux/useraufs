@@ -68,6 +68,24 @@ class UserAufs:
         if error != 0:
             raise Error("failed exitcode (%d): %s" % (os.WEXITSTATUS(error), command))
 
+    def _init_aufs_dir(self, dir):
+        """Initialize aufs directory by creating user-owned internal files.
+        This will prevent aufs from creating these files owned by root"""
+
+        # drop privileges temporarily to create these files
+        # as the calling user
+        os.seteuid(os.getuid())
+
+        lwh = os.path.join(dir, ".wh..wh.aufs")
+        if not os.path.lexists(lwh):
+            file(lwh, "w").close()
+
+        plink = os.path.join(dir, ".wh..wh.plink")
+        if not os.path.lexists(plink):
+            os.mkdir(plink)
+
+        os.seteuid(0)
+
     def _check_is_dir_ok(self, dir):
         if not os.path.isdir(dir):
             raise Error("not a directory: %s" % dir)
@@ -89,10 +107,12 @@ class UserAufs:
 
     def mount(self, branches, mnt, udba=None):
         dirs = [ re.sub('=.*', '', branch.strip()) for branch in branches.split(':') ]
-        dirs.append(mnt)
 
         for dir in dirs:
             self._check_is_dir_ok(dir)
+            self._init_aufs_dir(dir)
+
+        self._check_is_dir_ok(mnt)
 
         options = "dirs=" + branches
         if udba:
@@ -107,10 +127,12 @@ class UserAufs:
         if operations:
             dirs = [ re.sub(r'^.*:(.*?)(?:=.*)?$', lambda m: m.group(1), operation.strip())
                      for operation in operations.split(',') ]
-            dirs.append(mnt)
 
             for dir in dirs:
                 self._check_is_dir_ok(dir)
+                self._init_aufs_dir(dir)
+
+            self._check_is_dir_ok(mnt)
 
             options += "," + operations
             

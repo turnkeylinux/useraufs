@@ -1,4 +1,5 @@
 import os
+from os.path import *
 import re
 import pwd
 import utils
@@ -13,7 +14,7 @@ class UserAufs:
         self.allowed_uids = [] # empty array means allow all
         self.allowed_dirs = [] # empty array means allow all
 
-        if not os.path.exists(self.CONF_FILE):
+        if not exists(self.CONF_FILE):
             return
         
         for line in file(self.CONF_FILE).readlines():
@@ -30,13 +31,13 @@ class UserAufs:
                     raise Error("relative paths are illegal")
 
                 # I think its better to just ignore non-existent paths
-                if not os.path.exists(val):
+                if not exists(val):
                     continue
 
-                if not os.path.isdir(val):
+                if not isdir(val):
                     raise Error("not a directory: '%s'" % val)
                 
-                self.allowed_dirs.append(os.path.realpath(val))
+                self.allowed_dirs.append(realpath(val))
             else:
                 raise Error("illegal configuration line: " + line)
         
@@ -76,18 +77,18 @@ class UserAufs:
         # as the calling user
         os.seteuid(os.getuid())
 
-        lwh = os.path.join(dir, ".wh..wh.aufs")
-        if not os.path.lexists(lwh):
+        lwh = join(dir, ".wh..wh.aufs")
+        if not lexists(lwh):
             file(lwh, "w").close()
 
-        plink = os.path.join(dir, ".wh..wh.plink")
-        if not os.path.lexists(plink):
+        plink = join(dir, ".wh..wh.plink")
+        if not lexists(plink):
             os.mkdir(plink)
 
         os.seteuid(0)
 
     def _check_is_dir_ok(self, dir):
-        if not os.path.isdir(dir):
+        if not isdir(dir):
             raise Error("not a directory: %s" % dir)
 
         if os.lstat(dir).st_uid != self.uid:
@@ -95,7 +96,7 @@ class UserAufs:
 
         if self.allowed_dirs:
             def is_dir_allowed(dir):
-                dir = os.path.realpath(dir)
+                dir = realpath(dir)
                 for allowed_dir in self.allowed_dirs:
                     if dir == allowed_dir or dir.startswith(allowed_dir + '/'):
                         return True

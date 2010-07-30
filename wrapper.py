@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # Copyright (c) 2010 TurnKey Linux - all rights reserved
-"""User interface for aufs
+"""Safe suid root user interface for aufs
 """
 
 import re

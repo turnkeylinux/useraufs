@@ -28,7 +28,7 @@ class UserAufs:
                 self.allowed_uids.append(pwd.getpwnam(val).pw_uid)
             elif op == 'allow_dir':
                 if not val.startswith('/'):
-                    raise Error("relative paths are illegal")
+                    raise Error("configuration error - relative path `%s' is illegal" % val) 
 
                 self.allowed_dirs.append(realpath(val))
             else:

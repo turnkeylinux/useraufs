@@ -140,6 +140,21 @@ class UserAufs:
         command = "umount " + utils.mkarg(mnt)
         self._system(command)
 
+    def get_mounts(self):
+        mounts = []
+        for line in file("/proc/mounts").readlines():
+            mount = line.strip().split(' ')
+            if mount[2] != 'aufs':
+                continue
+
+            dir = mount[1]
+            if os.lstat(dir).st_uid != self.uid:
+                continue
+
+            branches = re.sub(r'.*br:', '', mount[3])
+            mounts.append((branches, dir))
+
+        return mounts
 
 # convenience functions
 def mount(branches, mnt, **opts):
@@ -150,7 +165,9 @@ def umount(mnt):
 
 def remount(operations, mnt):
     UserAufs().remount(operations, mnt)
-    
+
+def get_mounts():
+    return UserAufs().get_mounts()
 
     
 

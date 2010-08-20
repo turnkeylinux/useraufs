@@ -30,13 +30,6 @@ class UserAufs:
                 if not val.startswith('/'):
                     raise Error("relative paths are illegal")
 
-                # I think its better to just ignore non-existent paths
-                if not exists(val):
-                    continue
-
-                if not isdir(val):
-                    raise Error("not a directory: '%s'" % val)
-                
                 self.allowed_dirs.append(realpath(val))
             else:
                 raise Error("illegal configuration line: " + line)

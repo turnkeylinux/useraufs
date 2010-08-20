@@ -100,6 +100,9 @@ class UserAufs:
                 raise Error("configuration disallows operations involving directory '%s'" % dir)
 
     def mount(self, branches, mnt, udba=None):
+        if self.is_mounted(mnt):
+            raise Error("`%s' already mounted" % mnt)
+        
         dirs = [ re.sub('=.*', '', branch.strip()) for branch in branches.split(':') ]
 
         for dir in dirs:
@@ -155,6 +158,12 @@ class UserAufs:
             mounts.append((branches, dir))
 
         return mounts
+
+    def is_mounted(self, mnt):
+        for branches, dir in self.get_mounts():
+            if dir == realpath(mnt):
+                return True
+        return False
 
 # convenience functions
 def mount(branches, mnt, **opts):

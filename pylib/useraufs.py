@@ -50,8 +50,8 @@ class UserAufs:
         if euid != 0:
             raise Error("suid root privileges required (euid = %d)" % euid)
 
-        if uid == 0:
-            raise Error("useraufs may not be used by root")
+        if uid == 0 and uid not in self.allowed_uids:
+            raise Error("useraufs may not be used by root unless explicitly allowed")
 
         username = pwd.getpwuid(uid).pw_name
         if self.allowed_uids and uid not in self.allowed_uids:

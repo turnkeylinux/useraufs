@@ -10,14 +10,24 @@ execution proxy to more securely support setuid root applications.
 The basic principle is that users can safely perform aufs operations
 on any directory which they own.
 
-An HRA systems-level detail is that useraufs explicitly disallows root
-from using it. To enable useraufs to operate under MAC, we need to
-grant it integrity threatening capabilities such as
-CAP_SYS_ADMIN. This is a capability that root does not have under the
-default HRA policy. If we allowed useraufs to be run by root, and
-operate on root owned directories, it could be used by an attacker
-that has compromised root access to circumvent the default policy and
-compromise system integrity.
+By default, useraufs explicitly disallows root from using it, because
+to enable useraufs to operate under MAC, we need to give it
+integrity threatening capabilities such as CAP_SYS_ADMIN. This is a
+capability that root will not usually be given under a reasonable HRA policy. 
+The risk is that by allowing useraufs to be run by root, and operate
+on root owned directories, useraufs could be used by an attacker that has
+compromised root access to completely circumvent the MAC policy and
+severely compromise system integrity.
+
+Though root is not allowed to use useraufs by default, useraufs may be
+configured to allow root by adding "allow_user root" to the configuration
+file. To prevent circumvention of a MAC security policy, it is recommended
+to limit the directories useraufs may operate in via the `allow_dir'
+configuration directive (see below for further details). 
+
+If allowed to run as root, then useraufs will grant root special privileges,
+such as the ability to mount and umount directories not owned by root,
+as well the ability to see aufs mounts by all users.
 
 useraufs is a bit easier to use than vanilla aufs options through the
 mount commands. For the time being, it does not support the full
@@ -48,7 +58,7 @@ This directive adds the uid of username to the list of allowed useraufs
 users.
 
 If the configuration file does not include any allow_user directives,
-useraufs allows all users.
+useraufs allows all users, except root.
 
 2) allow_dir /path/to/allow
 

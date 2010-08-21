@@ -84,7 +84,7 @@ class UserAufs:
         if not isdir(dir):
             raise Error("not a directory: %s" % dir)
 
-        if os.lstat(dir).st_uid != self.uid:
+        if self.uid != 0 and os.lstat(dir).st_uid != self.uid:
             raise Error("directory '%s' is not owned by user %s" % (dir, self.username))
 
         if self.allowed_dirs:
@@ -151,7 +151,7 @@ class UserAufs:
                 continue
 
             dir = mount[1]
-            if os.lstat(dir).st_uid != self.uid:
+            if self.uid != 0 and os.lstat(dir).st_uid != self.uid:
                 continue
 
             branches = re.sub(r'.*br:', '', mount[3])

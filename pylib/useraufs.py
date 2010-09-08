@@ -133,8 +133,8 @@ class UserAufs:
 
             options += "," + operations
             
-        command = "mount -o %s %s" % (utils.mkarg(options),
-                                      utils.mkarg(mnt))
+        command = "mount -n -o %s %s" % (utils.mkarg(options),
+                                         utils.mkarg(mnt))
         self._system(command)
 
     def umount(self, mnt):

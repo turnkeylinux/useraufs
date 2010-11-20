@@ -20,7 +20,7 @@ from utils import fatal
 
 @help.usage(__doc__)
 def usage():
-    print >> sys.stderr, "Syntax: %s [ -options ] <mount-path> <branch> [ <branch> ... ]" % sys.argv[0]
+    print >> sys.stderr, "Syntax: %s [ -options ] <mount-path> <branch> [<branch> ...]" % sys.argv[0]
     
 def main():
     try:

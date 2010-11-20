@@ -1,0 +1,5 @@
+v1.0 Release Notes
+==================
+
+Releasing useraufs to mark the last version with the old cli.
+The next version will be break backwards compatibility.

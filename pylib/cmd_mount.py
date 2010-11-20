@@ -20,7 +20,7 @@ from utils import fatal
 
 @help.usage(__doc__)
 def usage():
-    print >> sys.stderr, "Syntax: %s [ -options ] <branch>[:<branch> ...] <mount-path>" % sys.argv[0]
+    print >> sys.stderr, "Syntax: %s [ -options ] <mount-path> <branch> [ <branch> ... ]" % sys.argv[0]
     
 def main():
     try:
@@ -38,10 +38,12 @@ def main():
         elif opt == '-h':
             usage()
 
-    if len(args) != 2:
+    if len(args) < 2:
         usage()
 
-    branches, mnt = args
+    mnt = args[0]
+    branches = args[1:]
+
     try:
         useraufs.mount(branches, mnt, udba=udba_level)
     except useraufs.Error, e:

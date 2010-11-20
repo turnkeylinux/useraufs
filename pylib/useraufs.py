@@ -103,7 +103,7 @@ class UserAufs:
         if self.is_mounted(mnt):
             raise Error("`%s' already mounted" % mnt)
         
-        dirs = [ re.sub('=.*', '', branch.strip()) for branch in branches.split(':') ]
+        dirs = [ re.sub('=.*', '', branch.strip()) for branch in branches ]
 
         for dir in dirs:
             self._check_is_dir_ok(dir)
@@ -111,7 +111,7 @@ class UserAufs:
 
         self._check_is_dir_ok(mnt)
 
-        options = "dirs=" + branches
+        options = "dirs=" + ":".join(branches)
         if udba:
             options += ",udba=" + udba
         

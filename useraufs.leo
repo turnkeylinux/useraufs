@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <leo_file>
 <leo_header file_format="2" tnodes="0" max_tnode_index="8" clone_windows="0"/>
-<globals body_outline_ratio="0.5">
-	<global_window_position top="0" left="472" height="933" width="800"/>
+<globals body_outline_ratio="0.277599142551">
+	<global_window_position top="0" left="470" height="933" width="800"/>
 	<global_log_window_position top="0" left="0" height="0" width="0"/>
 </globals>
 <preferences/>
@@ -11,12 +11,14 @@
 <v t="zaril.20100509072750" a="E"><vh>useraufs: suid wrapper for aufs</vh>
 <v t="zaril.20100509072750.1"><vh>modify pyproject to support suid Python scripts</vh></v>
 <v t="zaril.20100509072750.2" a="E"><vh>write useraufs wrapper</vh>
-<v t="zaril.20100509072750.3" a="TV"><vh>useraufs-mount</vh></v>
+<v t="zaril.20100509072750.3"><vh>useraufs-mount</vh></v>
 <v t="zaril.20100509072750.4"><vh>useraufs-umount</vh></v>
 <v t="zaril.20100509072750.5"><vh>useraufs-remount</vh></v>
 <v t="zaril.20100509072750.6"><vh>useraufs-show</vh></v>
 <v t="zaril.20100509072750.7"><vh>useraufs.conf limitations</vh></v>
 </v>
+<v t="zaril.20101120204227" a="TV"><vh>redesign cli</vh></v>
+<v t="zaril.20101120204238"><vh>illegal path workaround</vh></v>
 </v>
 </vnodes>
 <tnodes>
@@ -299,5 +301,13 @@ format
     allow_user z
 
 </t>
+<t tx="zaril.20101120204227">before
+    useraufs-mount a:b c
+after
+    useraufs-mount c a b
+
+
+    </t>
+<t tx="zaril.20101120204238"></t>
 </tnodes>
 </leo_file>

@@ -34,7 +34,7 @@ def main():
     operations = args[1:]
 
     try:
-        useraufs.remount(operations, mnt)
+        useraufs.remount(mnt, operations)
     except useraufs.Error, e:
         fatal(e)
     

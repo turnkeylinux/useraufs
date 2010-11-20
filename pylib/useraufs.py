@@ -99,7 +99,7 @@ class UserAufs:
             if not is_dir_allowed(dir):
                 raise Error("configuration disallows operations involving directory '%s'" % dir)
 
-    def mount(self, branches, mnt, udba=None):
+    def mount(self, mnt, branches, udba=None):
         if self.is_mounted(mnt):
             raise Error("`%s' already mounted" % mnt)
         
@@ -119,7 +119,7 @@ class UserAufs:
                                                    utils.mkarg(mnt))
         self._system(command)
 
-    def remount(self, operations, mnt):
+    def remount(self, mnt, operations):
         options = "remount"
         if operations:
             dirs = [ re.sub(r'^.*:(.*?)(?:=.*)?$', lambda m: m.group(1), operation.strip())

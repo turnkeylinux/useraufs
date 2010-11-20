@@ -45,7 +45,7 @@ def main():
     branches = args[1:]
 
     try:
-        useraufs.mount(branches, mnt, udba=udba_level)
+        useraufs.mount(mnt, branches, udba=udba_level)
     except useraufs.Error, e:
         fatal(e)
     

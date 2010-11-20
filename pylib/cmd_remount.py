@@ -23,14 +23,15 @@ from utils import fatal
 
 @help.usage(__doc__)
 def usage():
-    print >> sys.stderr, "Syntax: %s <operation>[,<operation> ...] <mount-path>" % sys.argv[0]
+    print >> sys.stderr, "Syntax: %s <mount-path> <operation> [<operation> ...]" % sys.argv[0]
     
 def main():
-    if len(sys.argv) != 3:
+    args = sys.argv[1:]
+    if len(args) < 2:
         usage()
 
-    operations = sys.argv[1]
-    mnt = sys.argv[2]
+    mnt = args[0]
+    operations = args[1:]
 
     try:
         useraufs.remount(operations, mnt)

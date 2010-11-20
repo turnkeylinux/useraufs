@@ -123,7 +123,7 @@ class UserAufs:
         options = "remount"
         if operations:
             dirs = [ re.sub(r'^.*:(.*?)(?:=.*)?$', lambda m: m.group(1), operation.strip())
-                     for operation in operations.split(',') ]
+                     for operation in operations ]
 
             for dir in dirs:
                 self._check_is_dir_ok(dir)
@@ -131,7 +131,7 @@ class UserAufs:
 
             self._check_is_dir_ok(mnt)
 
-            options += "," + operations
+            options += "," + ",".join(operations)
             
         command = "mount -n -o %s %s" % (utils.mkarg(options),
                                          utils.mkarg(mnt))

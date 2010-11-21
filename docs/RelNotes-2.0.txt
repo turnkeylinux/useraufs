@@ -1,0 +1,20 @@
+v2.0 Release Notes
+==================
+
+* changed cli in a backwards incompatible way (reason for major new version)
+Previously:
+	mount [ -options ] <branch>[:<branch> ...] <mount-path>
+	remount <operation>[,<operation> ...] <mount-path>
+
+Now:
+	mount [ -options ] <mount-path> <branch> [<branch> ...]
+	remount <mount-path> [<operation> ...]
+
+* bugfix: remount works without operations now
+
+* implemented workaround to allow branches with ':' in them
+
+  GOTCHA: If a mount-path has a ':' in it, it works, but registers an error
+	  (due to a mount.aufs bug)
+
+

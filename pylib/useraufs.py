@@ -2,6 +2,7 @@ import os
 from os.path import *
 import re
 import pwd
+import tempfile
 import utils
 
 class Error(Exception):
@@ -54,6 +55,12 @@ class UserAufs:
         self.euid = euid
         self.username = username
 
+        self.temp_symlinks = []
+
+    def __del__(self):
+        for symlink in self.temp_symlinks:
+            os.remove(symlink)
+
     def _system(self, command):
         os.setuid(self.euid)
         error = os.system(command)
@@ -84,7 +91,7 @@ class UserAufs:
         if not isdir(dir):
             raise Error("not a directory: %s" % dir)
 
-        if self.uid != 0 and os.lstat(dir).st_uid != self.uid:
+        if self.uid != 0 and os.stat(dir).st_uid != self.uid:
             raise Error("directory '%s' is not owned by user %s" % (dir, self.username))
 
         if self.allowed_dirs:
@@ -99,10 +106,34 @@ class UserAufs:
             if not is_dir_allowed(dir):
                 raise Error("configuration disallows operations involving directory '%s'" % dir)
 
+    def _filter_branch(self, branch):
+        if ':' not in branch:
+            return branch
+
+        if '=' in branch:
+            dir, flags = branch.split("=", 1)
+        else:
+            dir = branch
+            flags = None
+            
+        fd, path = tempfile.mkstemp(prefix="useraufs.")
+        os.close(fd)
+        os.remove(path)
+            
+        os.symlink(realpath(dir), path)
+        self.temp_symlinks.append(path)
+
+        if flags:
+            return path + "=" + flags
+        else:
+            return path
+    
     def mount(self, mnt, branches, udba=None):
         if self.is_mounted(mnt):
             raise Error("`%s' already mounted" % mnt)
         
+        branches = map(self._filter_branch, branches)
+
         dirs = [ re.sub('=.*', '', branch.strip()) for branch in branches ]
 
         for dir in dirs:
@@ -120,18 +151,18 @@ class UserAufs:
         self._system(command)
 
     def remount(self, mnt, operations):
+        for operation in operations:
+            m = re.match(r'(?:ins|mod|append|prepend|del):(.*?)(?:=.*)?$', operation)
+            if not m:
+                raise Error("illegal operation (%s)" % operation)
+
+            dir = m.group(1)
+            self._check_is_dir_ok(dir)
+            self._init_aufs_dir(dir)
+
         options = "remount"
-        if operations:
-            dirs = [ re.sub(r'^.*:(.*?)(?:=.*)?$', lambda m: m.group(1), operation.strip())
-                     for operation in operations ]
-
-            for dir in dirs:
-                self._check_is_dir_ok(dir)
-                self._init_aufs_dir(dir)
-
-            self._check_is_dir_ok(mnt)
-
-            options += "," + ",".join(operations)
+        self._check_is_dir_ok(mnt)
+        options += "," + ",".join(operations)
             
         command = "mount -n -o %s %s" % (utils.mkarg(options),
                                          utils.mkarg(mnt))

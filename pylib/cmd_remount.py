@@ -23,11 +23,11 @@ from utils import fatal
 
 @help.usage(__doc__)
 def usage():
-    print >> sys.stderr, "Syntax: %s <mount-path> <operation> [<operation> ...]" % sys.argv[0]
+    print >> sys.stderr, "Syntax: %s <mount-path> [<operation> ...]" % sys.argv[0]
     
 def main():
     args = sys.argv[1:]
-    if len(args) < 2:
+    if len(args) < 1:
         usage()
 
     mnt = args[0]

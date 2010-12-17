@@ -8,6 +8,8 @@ import utils
 class Error(Exception):
     pass
 
+from executil import system, ExecError
+
 class UserAufs:
     CONF_FILE="/etc/useraufs.conf"
     
@@ -61,13 +63,15 @@ class UserAufs:
         for symlink in self.temp_symlinks:
             os.remove(symlink)
 
-    def _system(self, command):
+    def _system(self, command, *args):
         os.setuid(self.euid)
-        error = os.system(command)
-        os.setreuid(self.uid, self.euid)
-
-        if error != 0:
-            raise Error("failed exitcode (%d): %s" % (os.WEXITSTATUS(error), command))
+        try:
+            try:
+                system(command, *args)
+            except ExecError, e:
+                raise Error(e)
+        finally:
+            os.setreuid(self.uid, self.euid)
 
     def _init_aufs_dir(self, dir):
         """Initialize aufs directory by creating user-owned internal files.
@@ -146,9 +150,7 @@ class UserAufs:
         if udba:
             options += ",udba=" + udba
         
-        command = "mount -t aufs -o %s none %s" % (utils.mkarg(options),
-                                                   utils.mkarg(mnt))
-        self._system(command)
+        self._system("mount -t aufs -o", options, "none", mnt)
 
     def remount(self, mnt, operations):
         for operation in operations:
@@ -164,15 +166,12 @@ class UserAufs:
         self._check_is_dir_ok(mnt)
         options += "," + ",".join(operations)
             
-        command = "mount -n -o %s %s" % (utils.mkarg(options),
-                                         utils.mkarg(mnt))
-        self._system(command)
+        self._system("mount -n -o", options, mnt)
 
     def umount(self, mnt):
         self._check_is_dir_ok(mnt)
 
-        command = "umount " + utils.mkarg(mnt)
-        self._system(command)
+        self._system("umount", mnt)
 
     def get_mounts(self):
         mounts = []

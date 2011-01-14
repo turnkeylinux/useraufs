@@ -181,7 +181,8 @@ class UserAufs:
                 continue
 
             dir = mount[1]
-            if self.uid != 0 and os.lstat(dir).st_uid != self.uid:
+            if not exists(dir) or \
+               (self.uid != 0 and os.lstat(dir).st_uid != self.uid):
                 continue
 
             branches = re.sub(r'.*br:', '', mount[3])

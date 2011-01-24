@@ -28,7 +28,12 @@ class UserAufs:
 
             op, val = re.split(r'\s+', line, 1)
             if op == 'allow_user':
-                self.allowed_uids.append(pwd.getpwnam(val).pw_uid)
+                if val.isdigit():
+                    uid = int(val)
+                else:
+                    uid = pwd.getpwnam(val).pw_uid
+                
+                self.allowed_uids.append(uid)
             elif op == 'allow_dir':
                 if not val.startswith('/'):
                     raise Error("configuration error - relative path `%s' is illegal" % val) 

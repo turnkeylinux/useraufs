@@ -7,7 +7,7 @@ Standards-Version: 3.6.1
 
 Package: useraufs
 Architecture: any
-Depends: pyproject-common, aufs-modules
+Depends: pyproject-common
 Description: Safe suid root user interface for aufs
  Giving users the privilege to perform unrestricted aufs operations
  (e.g., using sudo) is a big security risk, as union mounts can be

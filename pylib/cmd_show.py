@@ -1,4 +1,13 @@
 #!/usr/bin/python
+# Copyright (c) TurnKey Linux - http://www.turnkeylinux.org
+#
+# This file is part of UserAUFS
+#
+# UserAUFS is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 3 of the License, or (at your
+# option) any later version.
+
 """Show this user's union mounts
 Options:
 	-m	print multi-line format (more human readable)
